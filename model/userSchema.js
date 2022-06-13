@@ -1,4 +1,5 @@
 const mongoos = require("mongoose")
+const bcrypt = require("bcrypt")
 
 
 const userSchema = new mongoos.Schema({
@@ -11,7 +12,7 @@ const userSchema = new mongoos.Schema({
         required:true
     },
     phone:{
-        type: number,
+        type: Number,
         required:true
     },
     work:{
@@ -27,6 +28,15 @@ const userSchema = new mongoos.Schema({
         required:true
     },
         
+})
+
+userSchema.pre("save",async function (next) {
+    if(this.isModified("password")){
+        this.password = await bcrypt.hash(this.password,12)
+        this.cpassword = await bcrypt.hash(this.cpassword,12)
+    }
+    next()
+
 })
 
 const User = mongoos.model("USER",userSchema)
