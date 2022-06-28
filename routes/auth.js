@@ -14,6 +14,7 @@ routes.get("/", (req, res) => {
 
 routes.get("/about", (req, res) => {
     res.send("hello from aboute page")
+    res.cookie('title', 'GeeksforGeeks');
 })
 
 
@@ -78,6 +79,7 @@ routes.post('/signin', async (req, res) => {
         if(userExist){
             const isMatch = bcrypt.compare(password,userExist.password)
             TokenGen = await userExist.generateAuthToken()
+            res.cookie("token",TokenGen)
             console.log(TokenGen)
 
             if(!isMatch){
